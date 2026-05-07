@@ -144,6 +144,16 @@ tbody td:nth-child(3) {
   white-space: nowrap;
 }
 
+tbody td:last-child {
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+tbody td:last-child a {
+  display: inline-block;
+  margin: 0.08rem 0;
+}
+
 table a {
   font-family: "Courier New", Courier, monospace;
   font-size: 0.88rem;
@@ -181,4 +191,5 @@ footer {
   header h1  { font-size: 1.25rem; }
   main       { margin-top: 1.5rem; gap: 2rem; }
   tbody td:nth-child(3) { display: none; }   /* hide "Type" column on small screens */
+  tbody td:last-child { font-size: 0.88rem; line-height: 1.55; }
 }
