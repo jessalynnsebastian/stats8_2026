@@ -1,0 +1,184 @@
+/* ── Reset & base ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #222;
+  background: #f9f7f4;
+}
+
+a { color: #1a5276; }
+a:hover { color: #117a65; }
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+header {
+  background: #1a3a5c;
+  color: #fff;
+  padding: 2rem 1.5rem 1.5rem;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: normal;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.4rem;
+}
+
+header .subtitle {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+header .subtitle a {
+  color: #a8d5f5;
+}
+
+/* ── Nav ──────────────────────────────────────────────────────────────── */
+nav {
+  background: #14304d;
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0.65rem 1.4rem;
+  color: #cce4f7;
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background 0.15s;
+}
+
+nav a:hover {
+  background: #1a5276;
+  color: #fff;
+}
+
+/* ── Main layout ──────────────────────────────────────────────────────── */
+main {
+  max-width: 860px;
+  margin: 2.5rem auto 3rem;
+  padding: 0 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────── */
+section h2 {
+  font-size: 1.35rem;
+  font-weight: normal;
+  color: #1a3a5c;
+  border-bottom: 2px solid #1a3a5c;
+  padding-bottom: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+section h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 1.2rem 0 0.4rem;
+  color: #333;
+}
+
+section p,
+section ul {
+  margin-bottom: 0.6rem;
+}
+
+section ul {
+  padding-left: 1.4rem;
+}
+
+section ul li {
+  margin-bottom: 0.3rem;
+}
+
+/* ── Materials table ──────────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.93rem;
+  margin-bottom: 0.8rem;
+}
+
+thead tr {
+  background: #1a3a5c;
+  color: #fff;
+}
+
+thead th {
+  padding: 0.55rem 0.8rem;
+  text-align: left;
+  font-weight: normal;
+  letter-spacing: 0.03em;
+}
+
+tbody tr:nth-child(odd)  { background: #fff; }
+tbody tr:nth-child(even) { background: #eef2f7; }
+
+tbody tr:hover { background: #d6e4f0; }
+
+tbody td {
+  padding: 0.5rem 0.8rem;
+  vertical-align: top;
+}
+
+tbody td:first-child {
+  color: #555;
+  white-space: nowrap;
+  width: 3.5rem;
+}
+
+tbody td:nth-child(3) {
+  color: #555;
+  white-space: nowrap;
+}
+
+table a {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.88rem;
+}
+
+/* ── Note / tip box ───────────────────────────────────────────────────── */
+.note {
+  background: #eef7ee;
+  border-left: 3px solid #27ae60;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.88rem;
+  color: #2d5a2d;
+  margin-top: 0.6rem;
+}
+
+code {
+  background: #e8f0fb;
+  padding: 0.05em 0.3em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+footer {
+  background: #14304d;
+  color: #a0bbcc;
+  text-align: center;
+  padding: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.82rem;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  header h1  { font-size: 1.25rem; }
+  main       { margin-top: 1.5rem; gap: 2rem; }
+  tbody td:nth-child(3) { display: none; }   /* hide "Type" column on small screens */
+}
