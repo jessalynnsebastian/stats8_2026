@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>One-Population Inference — Decision Flowcharts</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── reset & base ─────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f0ede8;color:#1a1917;min-height:100vh}
+
+/* ── page shell ───────────────────────────────────────────────── */
+.page{max-width:900px;margin:0 auto;padding:48px 32px 80px}
+
+/* ── header ───────────────────────────────────────────────────── */
+.doc-title{font-family:'Source Serif 4',serif;font-size:32px;font-weight:600;color:#1a1917;line-height:1.15;margin-bottom:6px}
+.doc-sub{font-size:13px;color:#6b6860;font-family:'JetBrains Mono',monospace;margin-bottom:40px}
+
+/* ── section headers ──────────────────────────────────────────── */
+.section-label{display:flex;align-items:center;gap:14px;margin-bottom:28px;margin-top:64px}
+.section-pill{font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;padding:4px 12px;border-radius:20px}
+.pill-blue{background:#dbeafe;color:#1e40af}
+.pill-purple{background:#ede9fe;color:#4c1d95}
+.section-label h2{font-family:'Source Serif 4',serif;font-size:22px;font-weight:600;color:#1a1917}
+
+/* ── flow containers ──────────────────────────────────────────── */
+.flow{display:flex;flex-direction:column;align-items:center;gap:0}
+
+/* ── node base ────────────────────────────────────────────────── */
+.node{border-radius:10px;padding:14px 20px;position:relative;width:100%;max-width:640px;text-align:center}
+.node-title{font-size:14px;font-weight:600;line-height:1.4}
+.node-body{font-size:12.5px;line-height:1.6;margin-top:6px}
+.node-body code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:3px}
+
+/* ── node types ───────────────────────────────────────────────── */
+.node-start{background:#1a1917;color:#f0ede8;border:none}
+.node-start .node-title{color:#f0ede8}
+
+.node-question{background:#fff;border:1.5px solid #6b6860;border-radius:0;transform:none;clip-path:polygon(24px 0%,calc(100% - 24px) 0%,100% 50%,calc(100% - 24px) 100%,24px 100%,0% 50%);padding:16px 48px}
+.node-question .node-title{color:#1a1917}
+
+.node-blue{background:#dbeafe;border:1px solid #93c5fd}
+.node-blue .node-title{color:#1e3a8a}
+.node-blue .node-body{color:#1e40af}
+
+.node-purple{background:#ede9fe;border:1px solid #c4b5fd}
+.node-purple .node-title{color:#3b0764}
+.node-purple .node-body{color:#4c1d95}
+
+.node-green{background:#dcfce7;border:1px solid #86efac}
+.node-green .node-title{color:#14532d}
+.node-green .node-body{color:#166534}
+
+.node-amber{background:#fef9c3;border:1px solid #fde047}
+.node-amber .node-title{color:#713f12}
+.node-amber .node-body{color:#854d0e}
+
+.node-red{background:#fee2e2;border:1px solid #fca5a5}
+.node-red .node-title{color:#7f1d1d}
+.node-red .node-body{color:#991b1b}
+
+.node-formula{background:#0f172a;border:none}
+.node-formula .node-title{color:#7dd3fc;font-family:'JetBrains Mono',monospace;font-size:13px}
+.node-formula .node-body{color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:12px;white-space:pre-wrap;text-align:left}
+
+.node-finish{background:#14532d;color:#f0fdf4;border:none}
+.node-finish .node-title{color:#bbf7d0}
+.node-finish .node-body{color:#dcfce7}
+
+.node-stop{background:#7f1d1d;color:#fee2e2;border:none}
+.node-stop .node-title{color:#fca5a5}
+.node-stop .node-body{color:#fee2e2}
+
+/* ── connector ────────────────────────────────────────────────── */
+.connector{display:flex;flex-direction:column;align-items:center;gap:0;width:100%}
+.arrow-shaft{width:2px;height:28px;background:#9ca3af}
+.arrow-label{font-size:11px;color:#6b6860;font-style:italic;margin:2px 0;font-family:'JetBrains Mono',monospace;background:#f0ede8;padding:0 6px;position:relative;z-index:1}
+.arrowhead{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid #9ca3af}
+
+/* ── branch layout ────────────────────────────────────────────── */
+.branch-wrap{width:100%;max-width:700px;display:flex;flex-direction:column;align-items:center}
+.branch-bar{width:100%;display:flex;position:relative;justify-content:space-between;margin-bottom:0}
+.branch-bar::before{content:'';position:absolute;top:0;left:calc(25% + 20px);right:calc(25% + 20px);height:2px;background:#9ca3af}
+.branch-col{display:flex;flex-direction:column;align-items:center;width:46%}
+.branch-stem{width:2px;height:24px;background:#9ca3af}
+.branch-label{font-size:11px;color:#6b6860;font-style:italic;font-family:'JetBrains Mono',monospace;margin:2px 0;padding:0 6px;background:#f0ede8}
+
+/* ── three-branch layout ─────────────────────────────────────── */
+.branch3-bar{width:100%;display:flex;position:relative;justify-content:space-between;margin-bottom:0}
+.branch3-bar::before{content:'';position:absolute;top:0;left:calc(16.66% + 10px);right:calc(16.66% + 10px);height:2px;background:#9ca3af}
+.branch3-col{display:flex;flex-direction:column;align-items:center;width:30%}
+
+/* ── merge ────────────────────────────────────────────────────── */
+.merge-bar{width:100%;position:relative;height:2px;background:#9ca3af;max-width:640px;margin:0 auto}
+
+/* ── sub-detail block (inside a node) ────────────────────────── */
+.detail-row{display:flex;gap:8px;margin-top:8px;text-align:left}
+.detail-box{flex:1;background:rgba(255,255,255,0.5);border-radius:6px;padding:8px 10px;font-size:12px;line-height:1.5}
+.detail-box strong{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;opacity:.7}
+.detail-box code{font-family:'JetBrains Mono',monospace;font-size:11px}
+
+/* ── divider ──────────────────────────────────────────────────── */
+.page-divider{border:none;border-top:1px dashed #c4bfb6;margin:80px 0 0}
+
+/* ── note box ─────────────────────────────────────────────────── */
+.note{background:#fff;border:1px solid #e5e2db;border-left:4px solid #9ca3af;border-radius:0 8px 8px 0;padding:12px 16px;margin-top:12px;font-size:12.5px;line-height:1.65;color:#374151;width:100%;max-width:640px}
+.note strong{color:#1a1917}
+
+/* ── error table ──────────────────────────────────────────────── */
+.error-table{width:100%;max-width:640px;border-collapse:collapse;font-size:13px;margin-top:8px}
+.error-table th,.error-table td{border:1px solid #e5e2db;padding:10px 14px;text-align:center}
+.error-table th{background:#f9f8f6;font-weight:600;font-size:12px;color:#374151}
+.cell-ok{background:#f0fdf4;color:#166534}
+.cell-t1{background:#fee2e2;color:#991b1b}
+.cell-t2{background:#fef9c3;color:#854d0e}
+</style>
+</head>
+<body>
+<div class="page">
+
+<p class="doc-title">One-Population Inference</p>
+<p class="doc-sub">STATS 8 · Topic 7 · Decision flowcharts &amp; procedure guides</p>
+
+<!-- ════════════════════════════════════════════════════════════
+     PART 1 — CONFIDENCE INTERVALS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section-label" style="margin-top:0">
+  <span class="section-pill pill-blue">Part 1</span>
+  <h2>Confidence Intervals</h2>
+</div>
+
+<div class="flow">
+
+  <!-- START -->
+  <div class="node node-start" style="max-width:500px">
+    <div class="node-title">Start: you want to estimate a population parameter</div>
+    <div class="node-body" style="color:#d1d5db">Goal is a range of plausible values + a confidence level</div>
+  </div>
+
+  <!-- arrow -->
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- Q1: μ or p? -->
+  <div class="node node-question" style="max-width:480px">
+    <div class="node-title">What are you estimating?</div>
+  </div>
+
+  <!-- branch μ vs p -->
+  <div class="branch-wrap">
+    <div class="branch-bar">
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">μ — population mean</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-blue" style="max-width:100%">
+          <div class="node-title">Estimating a mean (μ)</div>
+          <div class="node-body">The variable is <strong>quantitative</strong><br>
+            <em>e.g. avg body temperature, avg folate intake, avg birth weight</em>
+          </div>
+        </div>
+      </div>
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">p — population proportion</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-purple" style="max-width:100%">
+          <div class="node-title">Estimating a proportion (p)</div>
+          <div class="node-body">The variable is <strong>categorical</strong> (success/fail)<br>
+            <em>e.g. % vaccinated, % with antibodies, % who test positive</em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- merge + arrow -->
+  <div class="merge-bar"></div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- Q2: CLT conditions -->
+  <div class="node node-question" style="max-width:480px">
+    <div class="node-title">Are the CLT conditions met?</div>
+  </div>
+
+  <!-- CLT detail -->
+  <div class="node node-amber" style="max-width:640px;text-align:left">
+    <div class="node-title">What to check before proceeding</div>
+    <div class="detail-row">
+      <div class="detail-box">
+        <strong>Condition 1 — i.i.d.</strong>
+        Random sample from a <em>much larger</em> population (or data generated by an i.i.d. process)
+      </div>
+      <div class="detail-box">
+        <strong>Condition 2a — sample size for μ</strong>
+        n ≥ 20–30 is a rough rule of thumb. Larger n is always safer.
+      </div>
+      <div class="detail-box">
+        <strong>Condition 2b — sample size for p</strong>
+        <code>n·p̂ &gt; 10</code> <em>and</em> <code>n·(1−p̂) &gt; 10</code><br>
+        Use the sample proportion p̂ here (not p₀).
+      </div>
+    </div>
+  </div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- branch yes / no -->
+  <div class="branch-wrap">
+    <div class="branch-bar">
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">✓ YES — conditions met</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-green" style="max-width:100%">
+          <div class="node-title">Proceed — CLT applies</div>
+          <div class="node-body">Sampling distribution of the statistic is approximately Normal. The z-based CI formula is valid.</div>
+        </div>
+      </div>
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">✗ NO — conditions not met</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-stop" style="max-width:100%">
+          <div class="node-title">Stop — cannot use these formulas</div>
+          <div class="node-body">Consult your instructor for an alternative method.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- continue from YES branch -->
+  <div style="width:46%;align-self:flex-start;margin-left:0;display:flex;flex-direction:column;align-items:center">
+    <div class="arrow-shaft"></div>
+    <div class="arrowhead"></div>
+  </div>
+
+  <!-- <div class="connector" style="margin-top:0"><div class="arrow-shaft"></div><div class="arrowhead"></div></div> -->
+
+  <!-- Q3: confidence level -->
+  <div class="node node-question" style="max-width:480px">
+    <div class="node-title">What confidence level do you need?</div>
+  </div>
+
+  <div class="node node-amber" style="max-width:640px;text-align:left">
+    <div class="node-title">Find the critical value z_(1-α/2)</div>
+    <div class="node-body">
+      Set α = 1 − (confidence level as decimal), then compute z_(1-α/2) = <code>qnorm(1 − α/2)</code><br><br>
+      <div class="detail-row">
+        <div class="detail-box"><strong>90% CI</strong>α = 0.10<br>z_(1-α/2) = <code>qnorm(0.95)</code> ≈ <strong>1.645</strong></div>
+        <div class="detail-box"><strong>95% CI</strong>α = 0.05<br>z_(1-α/2) = <code>qnorm(0.975)</code> ≈ <strong>1.96</strong></div>
+        <div class="detail-box"><strong>99% CI</strong>α = 0.01<br>z_(1-α/2) = <code>qnorm(0.995)</code> ≈ <strong>2.576</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- Q4: which formula -->
+  <div class="node node-question" style="max-width:480px">
+    <div class="node-title">Which formula? (depends on the parameter)</div>
+  </div>
+
+  <!-- formula branch -->
+  <div class="branch-wrap">
+    <div class="branch-bar">
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">μ — mean</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-formula" style="max-width:100%">
+          <div class="node-title">CI for a mean (μ)</div>
+          <div class="node-body">x̄  ±  z_(1-α/2) · (s / √n)
+
+where:
+  x̄ = sample mean
+  s  = sample standard deviation
+  n  = sample size
+  z_(1-α/2) = qnorm(1 − α/2)
+
+Width shrinks as n ↑ or confidence ↓</div>
+        </div>
+      </div>
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">p — proportion</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-formula" style="max-width:100%">
+          <div class="node-title">CI for a proportion (p)</div>
+          <div class="node-body">p̂  ±  z_(1-α/2) · √(p̂(1−p̂) / n)
+
+where:
+  p̂ = sample proportion (# successes / n)
+  n  = sample size
+  z_(1-α/2) = qnorm(1 − α/2)
+
+SE = √(p̂(1−p̂)/n) is the standard error</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- merge + arrow -->
+  <div class="merge-bar"></div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- interpret -->
+  <div class="node node-finish" style="max-width:640px;text-align:left">
+    <div class="node-title">Step 4 — Interpret in context</div>
+    <div class="node-body">
+      Template: "We are <em>[100(1-α)]%</em> confident that the population <em>[mean / proportion]</em> of <em>[context]</em> is between <em>[lower]</em> and <em>[upper] [units]</em>."
+      <div class="detail-row" style="margin-top:10px">
+        <div class="detail-box" style="background:rgba(0,0,0,0.2);color:#dcfce7">
+          <strong style="color:#86efac">⚠ do NOT say "probability"</strong>
+          Once data are collected and the interval is computed, the endpoints are fixed numbers — nothing is random anymore. Say "confident," not "there is a 95% chance."
+        </div>
+        <div class="detail-box" style="background:rgba(0,0,0,0.2);color:#dcfce7">
+          <strong style="color:#86efac">What "confident" means</strong>
+          The <em>procedure</em> has a 95% probability of capturing μ across many samples. Any specific interval either contains μ or it doesn't — we just don't know which.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .flow -->
+
+<div class="note" style="margin-top:24px">
+  <strong>Anatomy of any CI:</strong> &nbsp; [point estimate] ± [margin of error] &nbsp;=&nbsp; [point estimate] ± z_(1-α/2) × [standard error]<br>
+  The <em>standard error</em> (SE) estimates the SD of the sampling distribution using sample data. The <em>margin of error</em> = z_(1-α/2) × SE is half the width of the interval.
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PART 2 — HYPOTHESIS TESTING
+     ══════════════════════════════════════════-->
+</div>
+<div class="section-label" style="margin-top:0">
+  <span class="section-pill pill-blue">Part 2</span>
+  <h2>Hypothesis Testing</h2>
+</div>
+<div class="flow">
+
+  <!-- START -->
+  <div class="node node-start" style="max-width:520px">
+    <div class="node-title">Start: you want to test a claim about a population parameter</div>
+    <div class="node-body" style="color:#d1d5db">Is this one specific value plausible given the data we collected?</div>
+  </div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- Step 1 — hypotheses -->
+  <div class="node node-blue" style="max-width:640px;text-align:left">
+    <div class="node-title">Step 1 — State the hypotheses</div>
+    <div class="node-body">
+      <div class="detail-row">
+        <div class="detail-box">
+          <strong>Null hypothesis H₀</strong>
+          The "assume-true" statement. <em>Must contain equality</em> (=, ≥, or ≤). This is what you assume is true and then may reject.<br>
+          <em>e.g. H₀ : μ = 98.6 &nbsp;or&nbsp; H₀ : p = 0.5</em>
+        </div>
+        <div class="detail-box">
+          <strong>Alternative hypothesis Hₐ</strong>
+          What you're looking for evidence of. Together, H₀ and Hₐ must cover all possible values of the parameter.<br>
+          <em>e.g. Hₐ : μ ≠ 98.6 &nbsp;or&nbsp; Hₐ : p &lt; 0.5</em>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- Q: one-sided or two-sided -->
+  <div class="node node-question" style="max-width:480px">
+    <div class="node-title">One-sided or two-sided test?</div>
+  </div>
+
+  <!-- branch: two-sided / one-sided -->
+  <div class="branch-wrap">
+    <div class="branch-bar">
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">two-sided (Hₐ : ≠)</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-blue" style="max-width:100%">
+          <div class="node-title">Two-sided test</div>
+          <div class="node-body">
+            You care whether the parameter is <em>different in either direction</em> from the null value.<br><br>
+            H₀ : θ = θ₀ &nbsp;&nbsp; Hₐ : θ ≠ θ₀<br><br>
+            <em>e.g. "Is the mean body temperature different from 98.6°F?"<br>
+            "Is folate intake different from the recommended 100 μg?"</em>
+          </div>
+        </div>
+      </div>
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">one-sided (Hₐ : &lt; or &gt;)</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-purple" style="max-width:100%">
+          <div class="node-title">One-sided test</div>
+          <div class="node-body">
+            You care about <em>one specific direction</em> only — e.g. detecting harm, improvement, or a safety threshold.<br><br>
+            <strong>Left-tailed:</strong> H₀ : θ ≥ θ₀ &nbsp; Hₐ : θ &lt; θ₀<br>
+            <strong>Right-tailed:</strong> H₀ : θ ≤ θ₀ &nbsp; Hₐ : θ &gt; θ₀<br><br>
+            <em>e.g. "Is the HPV vaccination rate <strong>below</strong> 80%?"<br>
+            "Is allele transmission rate <strong>above</strong> 50%?"</em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- merge -->
+  <div class="merge-bar"></div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- Step 2 — CLT -->
+  <div class="node node-question" style="max-width:480px">
+    <div class="node-title">Step 2 — Are the CLT conditions met?</div>
+  </div>
+
+  <div class="node node-amber" style="max-width:640px;text-align:left">
+    <div class="node-title">What to check (same i.i.d. + sample size rules — with one twist for proportions)</div>
+    <div class="detail-row">
+      <div class="detail-box">
+        <strong>i.i.d.</strong>
+        Random sample from a much larger population
+      </div>
+      <div class="detail-box">
+        <strong>Sample size for μ</strong>
+        n ≥ 20–30 (rule of thumb)
+      </div>
+      <div class="detail-box">
+        <strong>Sample size for p — key difference!</strong>
+        Use the <em>null value p₀</em>, not p̂:<br>
+        <code>n·p₀ &gt; 10</code> and <code>n·(1−p₀) &gt; 10</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- branch yes / no -->
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+  <div class="branch-wrap">
+    <div class="branch-bar">
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">✓ YES — proceed</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-green" style="max-width:100%">
+          <div class="node-title">CLT applies — use z-test</div>
+          <div class="node-body">Sampling distribution of the statistic is approximately Normal. The z-score test is valid.</div>
+        </div>
+      </div>
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">✗ NO — stop</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-stop" style="max-width:100%">
+          <div class="node-title">Stop — z-test invalid</div>
+          <div class="node-body">Consult your instructor for an alternative method.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- Q: μ or p for test stat -->
+  <div class="node node-question" style="max-width:480px">
+    <div class="node-title">Step 3 — Compute the test statistic (z-score)</div>
+  </div>
+
+  <!-- test stat branch -->
+  <div class="branch-wrap">
+    <div class="branch-bar">
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">testing μ</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-formula" style="max-width:100%">
+          <div class="node-title">Test statistic for μ</div>
+          <div class="node-body">z = (x̄ − μ₀) / (s / √n)
+
+where:
+  x̄  = sample mean
+  μ₀ = null hypothesis value
+  s   = sample standard deviation
+  n   = sample size</div>
+        </div>
+      </div>
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">testing p</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-formula" style="max-width:100%">
+          <div class="node-title">Test statistic for p</div>
+          <div class="node-body">z = (p̂ − p₀) / √(p₀(1−p₀) / n)
+
+where:
+  p̂  = sample proportion
+  p₀ = null hypothesis value
+  n   = sample size
+
+⚠ Use p₀ in the denominator — NOT p̂!
+  One-sided null (e.g. p ≥ 0.8): use the
+  boundary value (0.8) as p₀.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="merge-bar"></div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- Q: direction for p-value -->
+  <div class="node node-question" style="max-width:480px">
+    <div class="node-title">Step 4 — Compute the p-value (depends on test direction)</div>
+  </div>
+
+  <!-- three-way branch for p-value -->
+  <div class="branch-wrap">
+    <div class="branch3-bar">
+      <div class="branch3-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">two-sided</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-blue" style="max-width:100%">
+          <div class="node-title">Two-sided p-value</div>
+          <div class="node-body">
+            <code>p = 2·P(Z ≤ −|z|)</code><br><br>
+            In R: <code>2 * pnorm(-abs(z))</code><br><br>
+            Both tails count because we care about deviations in either direction. The null is a single point (θ = θ₀) so extreme values on either side count as evidence against it.
+          </div>
+        </div>
+      </div>
+      <div class="branch3-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">left-tailed (Hₐ: &lt;)</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-purple" style="max-width:100%">
+          <div class="node-title">Left-tailed p-value</div>
+          <div class="node-body">
+            <code>p = P(Z ≤ z)</code><br><br>
+            In R: <code>pnorm(z)</code><br><br>
+            Only the left tail counts — we're looking for evidence that θ is <em>below</em> the null boundary. Values larger than z are not "more extreme" under this Hₐ.
+          </div>
+        </div>
+      </div>
+      <div class="branch3-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">right-tailed (Hₐ: &gt;)</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-purple" style="max-width:100%">
+          <div class="node-title">Right-tailed p-value</div>
+          <div class="node-body">
+            <code>p = P(Z ≥ z)</code><br><br>
+            In R: <code>1 - pnorm(z)</code><br><br>
+            Only the right tail counts — we're looking for evidence that θ is <em>above</em> the null boundary.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="merge-bar"></div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- Q: compare to alpha -->
+  <div class="node node-question" style="max-width:480px">
+    <div class="node-title">Step 5 — Compare p-value to significance level α</div>
+  </div>
+
+  <div class="node node-amber" style="max-width:640px;text-align:left">
+    <div class="node-title">Choosing α before collecting data</div>
+    <div class="node-body">α is set in advance based on how serious a false alarm (Type I Error) would be.
+      <div class="detail-row" style="margin-top:8px">
+        <div class="detail-box"><strong>Stringent (α = 0.01)</strong>Pharmaceutical drug trials, medical devices — a false positive could harm patients</div>
+        <div class="detail-box"><strong>Standard (α = 0.05)</strong>Default in most scientific research</div>
+        <div class="detail-box"><strong>Lenient (α = 0.10)</strong>Low-stakes decisions — e.g. A/B testing a button color</div>
+      </div>
+    </div>
+  </div>
+  <div class="connector"><div class="arrow-shaft"></div><div class="arrowhead"></div></div>
+
+  <!-- final decision branch -->
+  <div class="branch-wrap">
+    <div class="branch-bar">
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">p-value ≤ α</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-red" style="max-width:100%">
+          <div class="node-title">Reject H₀</div>
+          <div class="node-body">
+            Template: "At a significance level of <em>α</em>, we reject the null hypothesis. We have evidence to suggest that <em>[Hₐ in context]</em>."<br><br>
+            <strong>⚠ Possible Type I Error:</strong> rejecting H₀ when it is actually true. This happens α × 100% of the time even when H₀ is true.
+          </div>
+        </div>
+      </div>
+      <div class="branch-col">
+        <div class="branch-stem"></div>
+        <div class="branch-label">p-value &gt; α</div>
+        <div class="arrowhead"></div>
+        <div style="height:8px"></div>
+        <div class="node node-green" style="max-width:100%">
+          <div class="node-title">Fail to reject H₀</div>
+          <div class="node-body">
+            Template: "At a significance level of <em>α</em>, we fail to reject the null hypothesis. We do not have evidence to suggest that <em>[Hₐ in context]</em>."<br><br>
+            <strong>⚠ Possible Type II Error:</strong> failing to reject H₀ when it is actually false. Mnemonic: <em>"fail 2 reject = Type 2."</em><br>
+            <strong>Never say "accept H₀"</strong> — failing to find evidence is not proof H₀ is true.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .flow -->
+
+<!-- Type I / II error table -->
+<div style="width:100%;max-width:640px;margin:32px auto 0">
+  <p style="font-size:13px;font-weight:600;color:#374151;margin-bottom:8px">Error type reference</p>
+  <table class="error-table">
+    <tr>
+      <th style="background:#f0ede8"></th>
+      <th>H₀ is actually TRUE</th>
+      <th>H₀ is actually FALSE</th>
+    </tr>
+    <tr>
+      <th>Reject H₀</th>
+      <td class="cell-t1"><strong>Type I Error</strong><br>"False positive"<br>Probability = α</td>
+      <td class="cell-ok">Correct decision ✓<br>Power = 1 − β</td>
+    </tr>
+    <tr>
+      <th>Fail to reject H₀</th>
+      <td class="cell-ok">Correct decision ✓</td>
+      <td class="cell-t2"><strong>Type II Error</strong><br>"False negative"<br>Probability = β<br><em>fail 2 reject = Type 2</em></td>
+    </tr>
+  </table>
+</div>
+
+<div class="note" style="margin-top:20px">
+  <strong>Key principle behind hypothesis testing (proof by contradiction):</strong> Assume H₀ is true. Collect data. Ask: how probable is this data (or more extreme data) <em>under that assumption</em>? The p-value answers that question. If the answer is "very improbable" (p-value &lt; α), we take that as evidence against H₀ — just like a contradiction disproves an assumption in math.
+</div>
+
+</div><!-- end .page -->
+</body>
+</html>
