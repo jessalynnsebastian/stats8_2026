@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <title>One-Population Inference — Decision Flowcharts</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <style>
 /* ── reset & base ─────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
@@ -198,8 +207,8 @@ body{font-family:'Inter',sans-serif;background:#f0ede8;color:#1a1917;min-height:
       </div>
       <div class="detail-box">
         <strong>Condition 2b — sample size for p</strong>
-        <code>n·p̂ &gt; 10</code> <em>and</em> <code>n·(1−p̂) &gt; 10</code><br>
-        Use the sample proportion p̂ here (not p₀).
+        <code>n·$\hat{p}$ > 10</code> <em>and</em> <code>n·(1−$\hat{p}$) > 10</code><br>
+        Use the sample proportion $\hat{p}$ here (not $p_0$).
       </div>
     </div>
   </div>
@@ -245,13 +254,13 @@ body{font-family:'Inter',sans-serif;background:#f0ede8;color:#1a1917;min-height:
   </div>
 
   <div class="node node-amber" style="max-width:640px;text-align:left">
-    <div class="node-title">Find the critical value z_(1-α/2)</div>
+    <div class="node-title">Find the critical value $z_{1-\alpha/2}$</div>
     <div class="node-body">
-      Set α = 1 − (confidence level as decimal), then compute z_(1-α/2) = <code>qnorm(1 − α/2)</code><br><br>
+      Set $\alpha = 1 - $(confidence level as decimal), then compute $z_{1-\alpha/2} = $ <code>qnorm(1 − α/2)</code><br><br>
       <div class="detail-row">
-        <div class="detail-box"><strong>90% CI</strong>α = 0.10<br>z_(1-α/2) = <code>qnorm(0.95)</code> ≈ <strong>1.645</strong></div>
-        <div class="detail-box"><strong>95% CI</strong>α = 0.05<br>z_(1-α/2) = <code>qnorm(0.975)</code> ≈ <strong>1.96</strong></div>
-        <div class="detail-box"><strong>99% CI</strong>α = 0.01<br>z_(1-α/2) = <code>qnorm(0.995)</code> ≈ <strong>2.576</strong></div>
+        <div class="detail-box"><strong>90% CI</strong> $\alpha = 0.10$<br>$z_{1-\alpha/2} = $ <code>qnorm(0.95)</code> ≈ <strong>1.645</strong></div>
+        <div class="detail-box"><strong>95% CI</strong> $\alpha = 0.05$<br>$z_{1-\alpha/2} = $ <code>qnorm(0.975)</code> ≈ <strong>1.96</strong></div>
+        <div class="detail-box"><strong>99% CI</strong> $\alpha = 0.01$<br>$z_{1-\alpha/2} = $ <code>qnorm(0.995)</code> ≈ <strong>2.576</strong></div>
       </div>
     </div>
   </div>
@@ -272,15 +281,15 @@ body{font-family:'Inter',sans-serif;background:#f0ede8;color:#1a1917;min-height:
         <div style="height:8px"></div>
         <div class="node node-formula" style="max-width:100%">
           <div class="node-title">CI for a mean (μ)</div>
-          <div class="node-body">x̄  ±  z_(1-α/2) · (s / √n)
+          <div class="node-body">$$\bar{x} \pm z_{1-\alpha/2} \cdot \frac{s}{\sqrt{n}}$$
 
 where:
-  x̄ = sample mean
-  s  = sample standard deviation
-  n  = sample size
-  z_(1-α/2) = qnorm(1 − α/2)
+  $\bar{x}$ = sample mean
+  $s$ = sample standard deviation
+  $n$ = sample size
+  $z_{1-\alpha/2}$ = qnorm(1 − α/2)
 
-Width shrinks as n ↑ or confidence ↓</div>
+Width shrinks as $n$ ↑ or confidence ↓</div>
         </div>
       </div>
       <div class="branch-col">
@@ -290,14 +299,14 @@ Width shrinks as n ↑ or confidence ↓</div>
         <div style="height:8px"></div>
         <div class="node node-formula" style="max-width:100%">
           <div class="node-title">CI for a proportion (p)</div>
-          <div class="node-body">p̂  ±  z_(1-α/2) · √(p̂(1−p̂) / n)
+          <div class="node-body">$$\hat{p} \pm z_{1-\alpha/2} \cdot \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$$
 
 where:
-  p̂ = sample proportion (# successes / n)
-  n  = sample size
-  z_(1-α/2) = qnorm(1 − α/2)
+  $\hat{p}$ = sample proportion (# successes / $n$)
+  $n$ = sample size
+  $z_{1-\alpha/2}$ = qnorm(1 − α/2)
 
-SE = √(p̂(1−p̂)/n) is the standard error</div>
+$SE = \sqrt{\hat{p}(1-\hat{p})/n}$ is the standard error</div>
         </div>
       </div>
     </div>
@@ -319,7 +328,7 @@ SE = √(p̂(1−p̂)/n) is the standard error</div>
         </div>
         <div class="detail-box" style="background:rgba(0,0,0,0.2);color:#dcfce7">
           <strong style="color:#86efac">What "confident" means</strong>
-          The <em>procedure</em> has a 95% probability of capturing μ across many samples. Any specific interval either contains μ or it doesn't — we just don't know which.
+          The <em>procedure</em> has a 95% probability of capturing $\mu$ across many samples. Any specific interval either contains $\mu$ or it doesn't — we just don't know which.
         </div>
       </div>
     </div>
@@ -328,8 +337,8 @@ SE = √(p̂(1−p̂)/n) is the standard error</div>
 </div><!-- end .flow -->
 
 <div class="note" style="margin-top:24px">
-  <strong>Anatomy of any CI:</strong> &nbsp; [point estimate] ± [margin of error] &nbsp;=&nbsp; [point estimate] ± z_(1-α/2) × [standard error]<br>
-  The <em>standard error</em> (SE) estimates the SD of the sampling distribution using sample data. The <em>margin of error</em> = z_(1-α/2) × SE is half the width of the interval.
+  <strong>Anatomy of any CI:</strong> &nbsp; [point estimate] ± [margin of error] &nbsp;=&nbsp; [point estimate] ± $z_{1-\alpha/2}$ × [standard error]<br>
+  The <em>standard error</em> (SE) estimates the SD of the sampling distribution using sample data. The <em>margin of error</em> = $z_{1-\alpha/2}$ × SE is half the width of the interval.
 </div>
 
 
@@ -356,14 +365,14 @@ SE = √(p̂(1−p̂)/n) is the standard error</div>
     <div class="node-body">
       <div class="detail-row">
         <div class="detail-box">
-          <strong>Null hypothesis H₀</strong>
+          <strong>Null hypothesis $H_0$</strong>
           The "assume-true" statement. <em>Must contain equality</em> (=, ≥, or ≤). This is what you assume is true and then may reject.<br>
-          <em>e.g. H₀ : μ = 98.6 &nbsp;or&nbsp; H₀ : p = 0.5</em>
+          <em>e.g. $H_0 : \mu = 98.6$ &nbsp;or&nbsp; $H_0 : p = 0.5$</em>
         </div>
         <div class="detail-box">
-          <strong>Alternative hypothesis Hₐ</strong>
-          What you're looking for evidence of. Together, H₀ and Hₐ must cover all possible values of the parameter.<br>
-          <em>e.g. Hₐ : μ ≠ 98.6 &nbsp;or&nbsp; Hₐ : p &lt; 0.5</em>
+          <strong>Alternative hypothesis $H_a$</strong>
+          What you're looking for evidence of. Together, $H_0$ and $H_a$ must cover all possible values of the parameter.<br>
+          <em>e.g. $H_a : \mu \neq 98.6$ &nbsp;or&nbsp; $H_a : p &lt; 0.5$</em>
         </div>
       </div>
     </div>
@@ -387,7 +396,7 @@ SE = √(p̂(1−p̂)/n) is the standard error</div>
           <div class="node-title">Two-sided test</div>
           <div class="node-body">
             You care whether the parameter is <em>different in either direction</em> from the null value.<br><br>
-            H₀ : θ = θ₀ &nbsp;&nbsp; Hₐ : θ ≠ θ₀<br><br>
+            $H_0 : \theta = \theta_0$ &nbsp;&nbsp; $H_a : \theta \neq \theta_0$<br><br>
             <em>e.g. "Is the mean body temperature different from 98.6°F?"<br>
             "Is folate intake different from the recommended 100 μg?"</em>
           </div>
@@ -402,8 +411,8 @@ SE = √(p̂(1−p̂)/n) is the standard error</div>
           <div class="node-title">One-sided test</div>
           <div class="node-body">
             You care about <em>one specific direction</em> only — e.g. detecting harm, improvement, or a safety threshold.<br><br>
-            <strong>Left-tailed:</strong> H₀ : θ ≥ θ₀ &nbsp; Hₐ : θ &lt; θ₀<br>
-            <strong>Right-tailed:</strong> H₀ : θ ≤ θ₀ &nbsp; Hₐ : θ &gt; θ₀<br><br>
+            <strong>Left-tailed:</strong> $H_0 : \theta \geq \theta_0$ &nbsp; $H_a : \theta &lt; \theta_0$<br>
+            <strong>Right-tailed:</strong> $H_0 : \theta \leq \theta_0$ &nbsp; $H_a : \theta &gt; \theta_0$<br><br>
             <em>e.g. "Is the HPV vaccination rate <strong>below</strong> 80%?"<br>
             "Is allele transmission rate <strong>above</strong> 50%?"</em>
           </div>
@@ -434,8 +443,8 @@ SE = √(p̂(1−p̂)/n) is the standard error</div>
       </div>
       <div class="detail-box">
         <strong>Sample size for p — key difference!</strong>
-        Use the <em>null value p₀</em>, not p̂:<br>
-        <code>n·p₀ &gt; 10</code> and <code>n·(1−p₀) &gt; 10</code>
+        Use the <em>null value $p_0$</em>, not $\hat{p}$:<br>
+        <code>n·$p_0$ > 10</code> and <code>n·(1−$p_0$) > 10</code>
       </div>
     </div>
   </div>
@@ -484,13 +493,13 @@ SE = √(p̂(1−p̂)/n) is the standard error</div>
         <div style="height:8px"></div>
         <div class="node node-formula" style="max-width:100%">
           <div class="node-title">Test statistic for μ</div>
-          <div class="node-body">z = (x̄ − μ₀) / (s / √n)
+          <div class="node-body">$$z = \frac{\bar{x} - \mu_0}{s / \sqrt{n}}$$
 
 where:
-  x̄  = sample mean
-  μ₀ = null hypothesis value
-  s   = sample standard deviation
-  n   = sample size</div>
+  $\bar{x}$ = sample mean
+  $\mu_0$ = null hypothesis value
+  $s$ = sample standard deviation
+  $n$ = sample size</div>
         </div>
       </div>
       <div class="branch-col">
@@ -500,16 +509,16 @@ where:
         <div style="height:8px"></div>
         <div class="node node-formula" style="max-width:100%">
           <div class="node-title">Test statistic for p</div>
-          <div class="node-body">z = (p̂ − p₀) / √(p₀(1−p₀) / n)
+          <div class="node-body">$$z = \frac{\hat{p} - p_0}{\sqrt{p_0(1-p_0) / n}}$$
 
 where:
-  p̂  = sample proportion
-  p₀ = null hypothesis value
-  n   = sample size
+  $\hat{p}$ = sample proportion
+  $p_0$ = null hypothesis value
+  $n$ = sample size
 
-⚠ Use p₀ in the denominator — NOT p̂!
-  One-sided null (e.g. p ≥ 0.8): use the
-  boundary value (0.8) as p₀.</div>
+⚠ Use $p_0$ in the denominator — NOT $\hat{p}$!
+  One-sided null (e.g. $p \geq 0.8$): use the
+  boundary value (0.8) as $p_0$.</div>
         </div>
       </div>
     </div>
@@ -536,7 +545,7 @@ where:
           <div class="node-body">
             <code>p = 2·P(Z ≤ −|z|)</code><br><br>
             In R: <code>2 * pnorm(-abs(z))</code><br><br>
-            Both tails count because we care about deviations in either direction. The null is a single point (θ = θ₀) so extreme values on either side count as evidence against it.
+            Both tails count because we care about deviations in either direction. The null is a single point ($\theta = \theta_0$) so extreme values on either side count as evidence against it.
           </div>
         </div>
       </div>
@@ -550,7 +559,7 @@ where:
           <div class="node-body">
             <code>p = P(Z ≤ z)</code><br><br>
             In R: <code>pnorm(z)</code><br><br>
-            Only the left tail counts — we're looking for evidence that θ is <em>below</em> the null boundary. Values larger than z are not "more extreme" under this Hₐ.
+            Only the left tail counts — we're looking for evidence that $\theta$ is <em>below</em> the null boundary. Values larger than $z$ are not "more extreme" under this $H_a$.
           </div>
         </div>
       </div>
@@ -564,7 +573,7 @@ where:
           <div class="node-body">
             <code>p = P(Z ≥ z)</code><br><br>
             In R: <code>1 - pnorm(z)</code><br><br>
-            Only the right tail counts — we're looking for evidence that θ is <em>above</em> the null boundary.
+            Only the right tail counts — we're looking for evidence that $\theta$ is <em>above</em> the null boundary.
           </div>
         </div>
       </div>
@@ -583,9 +592,9 @@ where:
     <div class="node-title">Choosing α before collecting data</div>
     <div class="node-body">α is set in advance based on how serious a false alarm (Type I Error) would be.
       <div class="detail-row" style="margin-top:8px">
-        <div class="detail-box"><strong>Stringent (α = 0.01)</strong>Pharmaceutical drug trials, medical devices — a false positive could harm patients</div>
-        <div class="detail-box"><strong>Standard (α = 0.05)</strong>Default in most scientific research</div>
-        <div class="detail-box"><strong>Lenient (α = 0.10)</strong>Low-stakes decisions — e.g. A/B testing a button color</div>
+        <div class="detail-box"><strong>Stringent ($\alpha = 0.01$)</strong>Pharmaceutical drug trials, medical devices — a false positive could harm patients</div>
+        <div class="detail-box"><strong>Standard ($\alpha = 0.05$)</strong>Default in most scientific research</div>
+        <div class="detail-box"><strong>Lenient ($\alpha = 0.10$)</strong>Low-stakes decisions — e.g. A/B testing a button color</div>
       </div>
     </div>
   </div>
@@ -600,10 +609,10 @@ where:
         <div class="arrowhead"></div>
         <div style="height:8px"></div>
         <div class="node node-red" style="max-width:100%">
-          <div class="node-title">Reject H₀</div>
+          <div class="node-title">Reject $H_0$</div>
           <div class="node-body">
-            Template: "At a significance level of <em>α</em>, we reject the null hypothesis. We have evidence to suggest that <em>[Hₐ in context]</em>."<br><br>
-            <strong>⚠ Possible Type I Error:</strong> rejecting H₀ when it is actually true. This happens α × 100% of the time even when H₀ is true.
+            Template: "At a significance level of <em>α</em>, we reject the null hypothesis. We have evidence to suggest that <em>[$H_a$ in context]</em>."<br><br>
+            <strong>⚠ Possible Type I Error:</strong> rejecting $H_0$ when it is actually true. This happens $\alpha \times 100\%$ of the time even when $H_0$ is true.
           </div>
         </div>
       </div>
@@ -613,11 +622,11 @@ where:
         <div class="arrowhead"></div>
         <div style="height:8px"></div>
         <div class="node node-green" style="max-width:100%">
-          <div class="node-title">Fail to reject H₀</div>
+          <div class="node-title">Fail to reject $H_0$</div>
           <div class="node-body">
-            Template: "At a significance level of <em>α</em>, we fail to reject the null hypothesis. We do not have evidence to suggest that <em>[Hₐ in context]</em>."<br><br>
-            <strong>⚠ Possible Type II Error:</strong> failing to reject H₀ when it is actually false. Mnemonic: <em>"fail 2 reject = Type 2."</em><br>
-            <strong>Never say "accept H₀"</strong> — failing to find evidence is not proof H₀ is true.
+            Template: "At a significance level of <em>α</em>, we fail to reject the null hypothesis. We do not have evidence to suggest that <em>[$H_a$ in context]</em>."<br><br>
+            <strong>⚠ Possible Type II Error:</strong> failing to reject $H_0$ when it is actually false. Mnemonic: <em>"fail 2 reject = Type 2."</em><br>
+            <strong>Never say "accept $H_0$"</strong> — failing to find evidence is not proof $H_0$ is true.
           </div>
         </div>
       </div>
@@ -632,24 +641,24 @@ where:
   <table class="error-table">
     <tr>
       <th style="background:#f0ede8"></th>
-      <th>H₀ is actually TRUE</th>
-      <th>H₀ is actually FALSE</th>
+      <th>$H_0$ is actually TRUE</th>
+      <th>$H_0$ is actually FALSE</th>
     </tr>
     <tr>
-      <th>Reject H₀</th>
-      <td class="cell-t1"><strong>Type I Error</strong><br>"False positive"<br>Probability = α</td>
-      <td class="cell-ok">Correct decision ✓<br>Power = 1 − β</td>
+      <th>Reject $H_0$</th>
+      <td class="cell-t1"><strong>Type I Error</strong><br>"False positive"<br>Probability = $\alpha$</td>
+      <td class="cell-ok">Correct decision ✓<br>Power = $1 - \beta$</td>
     </tr>
     <tr>
-      <th>Fail to reject H₀</th>
+      <th>Fail to reject $H_0$</th>
       <td class="cell-ok">Correct decision ✓</td>
-      <td class="cell-t2"><strong>Type II Error</strong><br>"False negative"<br>Probability = β<br><em>fail 2 reject = Type 2</em></td>
+      <td class="cell-t2"><strong>Type II Error</strong><br>"False negative"<br>Probability = $\beta$<br><em>fail 2 reject = Type 2</em></td>
     </tr>
   </table>
 </div>
 
 <div class="note" style="margin-top:20px">
-  <strong>Key principle behind hypothesis testing (proof by contradiction):</strong> Assume H₀ is true. Collect data. Ask: how probable is this data (or more extreme data) <em>under that assumption</em>? The p-value answers that question. If the answer is "very improbable" (p-value &lt; α), we take that as evidence against H₀ — just like a contradiction disproves an assumption in math.
+  <strong>Key principle behind hypothesis testing (proof by contradiction):</strong> Assume $H_0$ is true. Collect data. Ask: how probable is this data (or more extreme data) <em>under that assumption</em>? The p-value answers that question. If the answer is "very improbable" (p-value < $\alpha$), we take that as evidence against $H_0$ — just like a contradiction disproves an assumption in math.
 </div>
 
 </div><!-- end .page -->
